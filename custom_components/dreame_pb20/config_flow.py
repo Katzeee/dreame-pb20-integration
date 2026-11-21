@@ -49,6 +49,34 @@ class PB20ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._account: dict[str, Any] = {}
         self._devices: dict[str, DeviceInfo] = {}
 
+    def _existing_accounts(self) -> dict[str, tuple[str, dict[str, str]]]:
+        """Offer a one-time import from known config schemas, with no runtime dependency."""
+        accounts = {}
+        seen = set()
+        for entry in self.hass.config_entries.async_entries():
+            if entry.domain not in (DOMAIN, "dreame_vacuum"):
+                continue
+            data = entry.data
+            if entry.domain == "dreame_vacuum" and data.get("account_type") != "dreame":
+                continue
+            username, password = data.get(CONF_USERNAME), data.get(CONF_PASSWORD)
+            region = data.get(CONF_REGION, data.get("country"))
+            if (
+                not isinstance(username, str)
+                or not isinstance(password, str)
+                or region not in REGIONS
+            ):
+                continue
+            key = (region, username.casefold())
+            if key in seen:
+                continue
+            seen.add(key)
+            accounts[entry.entry_id] = (
+                f"{entry.title} ({region})",
+                {CONF_USERNAME: username, CONF_PASSWORD: password, CONF_REGION: region},
+            )
+        return accounts
+
     async def _discover(self, account: dict[str, Any]) -> str | None:
         client = CloudClient(
             async_get_clientsession(self.hass),
@@ -70,6 +98,13 @@ class PB20ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return None if self._devices else "no_devices"
 
     async def async_step_user(self, user_input=None):
+        if self._existing_accounts():
+            return self.async_show_menu(
+                step_id="user", menu_options=["account", "existing_account"]
+            )
+        return await self.async_step_account(user_input)
+
+    async def async_step_account(self, user_input=None):
         errors = {}
         if user_input is not None:
             error = await self._discover(user_input)
@@ -78,7 +113,38 @@ class PB20ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_device()
             errors["base"] = error
         return self.async_show_form(
-            step_id="user", data_schema=account_schema(user_input or {}), errors=errors
+            step_id="account", data_schema=account_schema(user_input or {}), errors=errors
+        )
+
+    async def async_step_existing_account(self, user_input=None):
+        accounts = self._existing_accounts()
+        if not accounts:
+            return await self.async_step_account()
+        errors = {}
+        if user_input is not None:
+            selected = accounts.get(user_input["account_source"])
+            if selected is None:
+                errors["base"] = "account_unavailable"
+            else:
+                error = await self._discover(selected[1])
+                if error is None:
+                    self._account = dict(selected[1])
+                    return await self.async_step_device()
+                errors["base"] = error
+        return self.async_show_form(
+            step_id="existing_account",
+            errors=errors,
+            data_schema=vol.Schema(
+                {
+                    vol.Required("account_source"): selector.SelectSelector(
+                        selector.SelectSelectorConfig(
+                            options=[
+                                {"value": key, "label": value[0]} for key, value in accounts.items()
+                            ]
+                        )
+                    )
+                }
+            ),
         )
 
     async def async_step_device(self, user_input=None):

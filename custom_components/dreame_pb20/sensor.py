@@ -6,7 +6,13 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfDensity, UnitOfTemperature
+from homeassistant.const import (
+    PERCENTAGE,
+    EntityCategory,
+    UnitOfDensity,
+    UnitOfTemperature,
+    UnitOfTime,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -14,6 +20,22 @@ from .coordinator import PB20ConfigEntry
 from .entity import PB20Entity
 
 SENSORS = (
+    SensorEntityDescription(
+        key="aq",
+        translation_key="aq",
+        icon="mdi:leaf",
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
+    ),
+    SensorEntityDescription(
+        key="filter_days_remaining",
+        translation_key="filter_days_remaining",
+        icon="mdi:calendar-clock",
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.DAYS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        suggested_display_precision=0,
+    ),
     SensorEntityDescription(
         key="temperature",
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -90,7 +112,8 @@ class PB20Sensor(PB20Entity, SensorEntity):
             super().available
             and self.native_value is not None
             and (
-                self.entity_description.key == "filter_remaining"
+                self.entity_description.key in ("filter_remaining", "filter_days_remaining")
                 or self.coordinator.data.power is True
+                or self.coordinator.data.continuous_monitoring is True
             )
         )

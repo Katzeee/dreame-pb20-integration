@@ -9,5 +9,5 @@ CONF_REGION = "region"
 CONF_DEVICE_ID = "device_id"
 CONF_SCAN_INTERVAL = "scan_interval"
 DEFAULT_SCAN_INTERVAL = 30
-PLATFORMS = (Platform.FAN, Platform.SENSOR)
+PLATFORMS = (Platform.FAN, Platform.SENSOR, Platform.SWITCH, Platform.BUTTON)
 PRESETS = {"AI Purify": Mode.AI_PURIFY, "Sleep": Mode.SLEEP, "Custom": Mode.CUSTOM}

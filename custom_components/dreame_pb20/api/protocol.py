@@ -25,6 +25,11 @@ class Property(Enum):
     PM10 = (3, 6)
     FORMALDEHYDE = (3, 7)
     FILTER_REMAINING = (4, 16)
+    FILTER_DAYS_REMAINING = (4, 17)
+    AQ = (3, 12)
+    CHILD_LOCK = (6, 10)
+    CONTINUOUS_MONITORING = (6, 15)
+    UVC = (6, 21)
 
 
 class Mode(IntEnum):

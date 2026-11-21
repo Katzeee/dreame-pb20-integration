@@ -141,7 +141,7 @@ class CloudClient:
         return data["result"]
 
     async def read(self, device_id: str, bind_domain: str | None) -> dict[protocol.Property, Any]:
-        """Read the verified properties in one ten-property request."""
+        """Read the verified properties in one fifteen-property request."""
         result = await self._command(
             device_id,
             bind_domain,
@@ -192,18 +192,26 @@ class CloudClient:
 
     async def power(self, device_id: str, bind_domain: str | None, on: bool) -> None:
         """Set the desired power state using PB20's parameterized action."""
-        result = await self._command(
-            device_id,
-            bind_domain,
-            "action",
-            {
-                "did": device_id,
-                "siid": 2,
-                "aiid": 1,
-                "in": [{"piid": 1, "value": int(on)}],
-            },
-        )
+        await self.action(device_id, bind_domain, 2, 1, [{"piid": 1, "value": int(on)}])
+
+    async def action(
+        self,
+        device_id: str,
+        bind_domain: str | None,
+        service: int,
+        action: int,
+        inputs: list[dict] | None = None,
+    ) -> None:
+        """Validate the device's acknowledgement of an action."""
+        params = {"did": device_id, "siid": service, "aiid": action}
+        if inputs is not None:
+            params["in"] = inputs
+        result = await self._command(device_id, bind_domain, "action", params)
         if not isinstance(result, dict) or result.get("code") != 0:
-            raise CommandError("PB20 rejects the power action")
-        if (str(result.get("did")), result.get("siid"), result.get("aiid")) != (device_id, 2, 1):
-            raise CommandError("Power action response does not match the request")
+            raise CommandError("PB20 rejects the action")
+        if (str(result.get("did")), result.get("siid"), result.get("aiid")) != (
+            device_id,
+            service,
+            action,
+        ):
+            raise CommandError("Action response does not match the request")

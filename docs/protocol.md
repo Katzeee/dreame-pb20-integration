@@ -17,6 +17,11 @@ Verified firmware: `2.0.27_1029`.
 | `3 / 6` | PM10 | µg/m³ |
 | `3 / 7` | Formaldehyde | Raw value / 1000, mg/m³ |
 | `4 / 16` | All-in-one filter remaining | % |
+| `4 / 17` | All-in-one filter days remaining | Days, despite the App model's Hours name |
+| `3 / 12` | Dreame AQ index | Dimensionless, vendor-specific scale |
+| `6 / 10` | Child lock | 0 off, 1 on |
+| `6 / 15` | Continuous monitoring in standby | 0 off, 1 on |
+| `6 / 21` | UVC | 0 off, 1 on |
 
 The App formats formaldehyde to two decimal places. The integration preserves the
 converted measurement and recommends two decimal places for display.
@@ -32,6 +37,14 @@ Power uses `action`, with service `2`, action `1`, and input property `1`:
 The input uses `1` for on and `0` for standby. This differs from the readable power
 status enumeration. Writing the power status property directly returns `-4002`.
 The action sets an absolute state; it does not toggle.
+
+## Filter maintenance
+
+Replacing the all-in-one filter uses service `4`, action `8`, without an `in`
+field. The action definition comes from the PB20 device plugin. The reset button
+is disabled by default. Its command is not exercised on a used filter, so its
+acknowledgement is not yet verified live. It remains an explicit maintenance action.
+The App displays property `4 / 17 = 1076` as **1076 Days Remaining**.
 
 ## State and concurrency
 
@@ -68,5 +81,11 @@ The HA modules import successfully in Home Assistant 2026.11.1. Verification is
 limited to the China mainland endpoint and the firmware above; other available
 regions use the same endpoint format but do not have live verification here.
 
-Filter reset, child lock, display settings, scheduling, and ambiguous AQ fields are
-outside the supported surface.
+Child lock, continuous monitoring, and UVC each accept a 0-to-1 write and read back
+1. Each setting restores to its initial 0 value. Continuous monitoring also
+controls sensor availability during standby.
+
+The AQ index exposes the vendor value directly, without pretending it uses a
+standard AQI scale. Display brightness is not a PB20 setting in the device plugin.
+Scheduling, App account management, city/time-zone configuration, and OTA updates
+are outside the supported surface.

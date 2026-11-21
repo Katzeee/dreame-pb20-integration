@@ -2,15 +2,6 @@
   "title": "Dreame PB20",
   "config": {
     "step": {
-      "user": {
-        "title": "Connect to Dreamehome",
-        "description": "Use the Dreamehome account and region that owns your PB20.",
-        "data": {
-          "username": "Account",
-          "password": "Password",
-          "region": "Region"
-        }
-      },
       "device": {
         "title": "Select your PB20",
         "data": {
@@ -24,13 +15,37 @@
           "username": "Account",
           "password": "Password"
         }
+      },
+      "account": {
+        "title": "Connect to Dreamehome",
+        "description": "Use the Dreamehome account and region that owns your PB20.",
+        "data": {
+          "username": "Account",
+          "password": "Password",
+          "region": "Region"
+        }
+      },
+      "user": {
+        "title": "Dreamehome account",
+        "menu_options": {
+          "account": "Sign in to Dreamehome",
+          "existing_account": "Import an existing Dreamehome account"
+        }
+      },
+      "existing_account": {
+        "title": "Import an existing account",
+        "description": "Copy account settings into this integration. Authentication and password updates are independent; no tokens or runtime objects are shared.",
+        "data": {
+          "account_source": "Existing account"
+        }
       }
     },
     "error": {
       "invalid_auth": "Authentication fails. Check your account, password, and region.",
       "cannot_connect": "Cannot connect to the Dreame cloud. Try again later.",
       "no_devices": "No PB20 appears in this account and region.",
-      "device_unavailable": "This account cannot access the selected PB20."
+      "device_unavailable": "This account cannot access the selected PB20.",
+      "account_unavailable": "The source account is unavailable. Sign in directly."
     },
     "abort": {
       "already_configured": "This PB20 is already configured.",
@@ -74,6 +89,28 @@
       },
       "filter_remaining": {
         "name": "Filter remaining"
+      },
+      "filter_days_remaining": {
+        "name": "Filter days remaining"
+      },
+      "aq": {
+        "name": "Dreame AQ index"
+      }
+    },
+    "switch": {
+      "uvc": {
+        "name": "UVC"
+      },
+      "child_lock": {
+        "name": "Child lock"
+      },
+      "continuous_monitoring": {
+        "name": "Continuous monitoring"
+      }
+    },
+    "button": {
+      "reset_filter": {
+        "name": "Reset filter life after replacement"
       }
     }
   },

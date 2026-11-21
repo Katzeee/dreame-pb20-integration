@@ -45,6 +45,11 @@ class State:
     pm10: float | None
     formaldehyde: float | None
     filter_remaining: float | None
+    filter_days_remaining: float | None
+    aq: float | None
+    child_lock: bool | None
+    continuous_monitoring: bool | None
+    uvc: bool | None
 
     @classmethod
     def decode(cls, values: dict[Property, Any]) -> "State":
@@ -53,6 +58,12 @@ class State:
             if isinstance(value, bool) or not isinstance(value, (int, float)):
                 return None
             return value if math.isfinite(value) and minimum <= value <= maximum else None
+
+        def switch(prop: Property) -> bool | None:
+            value = values.get(prop)
+            return (
+                bool(value) if isinstance(value, (bool, int, float)) and value in (0, 1) else None
+            )
 
         raw_power = number(Property.POWER, 1, 2)
         raw_mode = number(Property.MODE, 0, 3)
@@ -71,6 +82,11 @@ class State:
             pm10=number(Property.PM10, 0, 1_000_000),
             formaldehyde=hcho / 1000 if hcho is not None else None,
             filter_remaining=number(Property.FILTER_REMAINING, 0, 100),
+            filter_days_remaining=number(Property.FILTER_DAYS_REMAINING, 0, 10000),
+            aq=number(Property.AQ, 0, 100),
+            child_lock=switch(Property.CHILD_LOCK),
+            continuous_monitoring=switch(Property.CONTINUOUS_MONITORING),
+            uvc=switch(Property.UVC),
         )
 
 
@@ -90,6 +106,22 @@ class PB20Device:
 
     async def refresh(self) -> State:
         async with self.lock:
+            return await self._read()
+
+    async def set_switch(self, prop: Property, enabled: bool) -> State:
+        """Apply one supported hardware setting."""
+        if prop not in {Property.CHILD_LOCK, Property.CONTINUOUS_MONITORING, Property.UVC}:
+            raise ValueError("Unsupported PB20 switch")
+        async with self.lock:
+            await self.client.write(
+                self.info.device_id, self.info.bind_domain, [(prop, int(enabled))]
+            )
+            return await self._read()
+
+    async def reset_filter(self) -> State:
+        """Reset the all-in-one filter life after replacement."""
+        async with self.lock:
+            await self.client.action(self.info.device_id, self.info.bind_domain, 4, 8)
             return await self._read()
 
     async def configure(
