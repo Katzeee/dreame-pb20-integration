@@ -88,9 +88,15 @@ custom_components/dreame_pb20/
 ```
 
 协议定义与实机验证范围见 [docs/protocol.md](docs/protocol.md)。
-本项目不包含自动化测试；CI 运行 Ruff 和 HA 的 hassfest 规范检查。
+本项目不包含自动化测试；CI 运行 Ruff、HA 的 hassfest 和完整 HACS 仓库校验。
 
 ```shell
 uvx ruff check .
 uvx ruff format --check .
 ```
+
+## 许可证与品牌
+
+代码采用 [MIT 许可证](LICENSE)。
+`brand` 目录中的追觅图标取自 [Home Assistant 品牌资源](https://github.com/home-assistant/brands/tree/master/custom_integrations/dreame_vacuum)，
+仅用于标识兼容设备，品牌图像和商标权归其各自权利人所有。本集成为社区项目，与追觅官方无隶属关系。

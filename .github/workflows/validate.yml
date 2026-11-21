@@ -23,3 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: home-assistant/actions/hassfest@master
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate HACS integration
+        uses: hacs/action@main
+        with:
+          category: integration
+          comment: false
