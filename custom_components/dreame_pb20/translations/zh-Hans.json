@@ -1,0 +1,88 @@
+{
+  "title": "Dreame PB20",
+  "config": {
+    "step": {
+      "user": {
+        "title": "连接追觅账号",
+        "description": "使用已绑定 PB20 的追觅账号，并选择设备所在地区。",
+        "data": {
+          "username": "账号",
+          "password": "密码",
+          "region": "地区"
+        }
+      },
+      "device": {
+        "title": "选择 PB20",
+        "data": {
+          "device_id": "设备"
+        }
+      },
+      "reauth_confirm": {
+        "title": "重新连接追觅账号",
+        "description": "输入有权访问这台 PB20 的账号和密码。",
+        "data": {
+          "username": "账号",
+          "password": "密码"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "登录失败，请检查账号、密码及地区。",
+      "cannot_connect": "无法连接追觅云服务，请稍后重试。",
+      "no_devices": "这个账号和地区下没有找到 PB20。",
+      "device_unavailable": "这个账号无法访问所选的 PB20。"
+    },
+    "abort": {
+      "already_configured": "这台 PB20 已添加。",
+      "reauth_successful": "登录信息已更新。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "轮询设置",
+        "data": {
+          "scan_interval": "更新间隔"
+        }
+      }
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "cn": "中国大陆",
+        "eu": "欧洲",
+        "us": "北美",
+        "sg": "新加坡",
+        "kr": "韩国"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "formaldehyde": {
+        "name": "甲醛"
+      },
+      "air_quality": {
+        "name": "空气质量",
+        "state": {
+          "excellent": "卓越",
+          "good": "良好",
+          "average": "一般",
+          "poor": "较差"
+        }
+      },
+      "filter_remaining": {
+        "name": "滤芯余量"
+      }
+    }
+  },
+  "exceptions": {
+    "command_failed": {
+      "message": "PB20 未确认操作结果，请查看设备当前状态后再重试。"
+    },
+    "authentication_failed": {
+      "message": "请在“设备与服务”中重新连接追觅账号。"
+    }
+  }
+}

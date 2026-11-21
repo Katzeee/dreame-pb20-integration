@@ -1,0 +1,88 @@
+{
+  "title": "Dreame PB20",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Dreamehome",
+        "description": "Use the Dreamehome account and region that owns your PB20.",
+        "data": {
+          "username": "Account",
+          "password": "Password",
+          "region": "Region"
+        }
+      },
+      "device": {
+        "title": "Select your PB20",
+        "data": {
+          "device_id": "Device"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect to Dreamehome",
+        "description": "Enter the credentials for the account that can access this PB20.",
+        "data": {
+          "username": "Account",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Authentication fails. Check your account, password, and region.",
+      "cannot_connect": "Cannot connect to the Dreame cloud. Try again later.",
+      "no_devices": "No PB20 appears in this account and region.",
+      "device_unavailable": "This account cannot access the selected PB20."
+    },
+    "abort": {
+      "already_configured": "This PB20 is already configured.",
+      "reauth_successful": "Authentication is updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Polling",
+        "data": {
+          "scan_interval": "Update interval"
+        }
+      }
+    }
+  },
+  "selector": {
+    "region": {
+      "options": {
+        "cn": "China mainland",
+        "eu": "Europe",
+        "us": "North America",
+        "sg": "Singapore",
+        "kr": "South Korea"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "formaldehyde": {
+        "name": "Formaldehyde"
+      },
+      "air_quality": {
+        "name": "Air quality",
+        "state": {
+          "excellent": "Excellent",
+          "good": "Good",
+          "average": "Average",
+          "poor": "Poor"
+        }
+      },
+      "filter_remaining": {
+        "name": "Filter remaining"
+      }
+    }
+  },
+  "exceptions": {
+    "command_failed": {
+      "message": "PB20 did not confirm the operation. Check its current state before trying again."
+    },
+    "authentication_failed": {
+      "message": "Reconnect your Dreamehome account in Devices & services."
+    }
+  }
+}

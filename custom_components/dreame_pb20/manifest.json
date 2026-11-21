@@ -1,0 +1,12 @@
+{
+  "domain": "dreame_pb20",
+  "name": "Dreame PB20",
+  "codeowners": ["@Katzeee"],
+  "config_flow": true,
+  "documentation": "https://github.com/Katzeee/dreame-pb20-integration",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Katzeee/dreame-pb20-integration/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
