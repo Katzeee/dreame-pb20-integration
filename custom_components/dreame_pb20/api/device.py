@@ -135,10 +135,13 @@ class PB20Device:
                 raise ValueError("A manual speed requires Custom mode")
             mode = Mode.CUSTOM
         async with self.lock:
-            if power is not None:
+            current = await self._read() if speed is not None else None
+            if power is not None and (current is None or current.power != power):
                 await self.client.power(self.info.device_id, self.info.bind_domain, power)
+                if current is not None:
+                    current = await self._read()
             writes = []
-            if mode is not None:
+            if mode is not None and (current is None or current.mode != mode):
                 writes.append((Property.MODE, int(mode)))
             if speed is not None:
                 writes.append((Property.SPEED, speed))

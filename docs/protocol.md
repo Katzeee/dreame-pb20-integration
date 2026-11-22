@@ -50,7 +50,11 @@ The App displays property `4 / 17 = 1076` as **1076 Days Remaining**.
 
 The cloud envelope and inner command share a fresh correlation ID on each RPC.
 The device lock serializes polling, command sequences, and their readback.
-Setting a manual speed writes Custom mode and the selected level in one request.
+Setting a manual speed first reads the device state inside the same lock. An
+already-running device in Custom mode receives only the selected speed level,
+without another power action or mode write. A different mode receives Custom
+mode and speed in one request. A standby device powers on and reads back its
+mode before applying the required settings.
 Property write responses must account for every requested address and report success.
 Power responses must identify the requested device, service, and action.
 An accepted cloud envelope without a device result is a failure.
