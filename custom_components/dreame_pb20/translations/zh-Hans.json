@@ -29,14 +29,14 @@
         "title": "追觅账号",
         "menu_options": {
           "account": "登录追觅账号",
-          "existing_account": "导入已配置的追觅账号"
+          "existing_account": "使用已有 PB20 的账号"
         }
       },
       "existing_account": {
-        "title": "导入已有账号",
-        "description": "将账号配置复制到本集成，之后独立登录和更新密码。不会共享令牌，也不依赖来源集成继续运行。",
+        "title": "使用已有 PB20 的账号",
+        "description": "选择一台已配置的 PB20，将其账号配置复制到新条目。每个条目独立登录和更新密码。",
         "data": {
-          "account_source": "已有账号"
+          "account_source": "已配置的 PB20"
         }
       }
     },

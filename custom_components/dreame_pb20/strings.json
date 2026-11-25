@@ -29,14 +29,14 @@
         "title": "Dreamehome account",
         "menu_options": {
           "account": "Sign in to Dreamehome",
-          "existing_account": "Import an existing Dreamehome account"
+          "existing_account": "Use an account from another PB20"
         }
       },
       "existing_account": {
-        "title": "Import an existing account",
-        "description": "Copy account settings into this integration. Authentication and password updates are independent; no tokens or runtime objects are shared.",
+        "title": "Use an account from another PB20",
+        "description": "Select a configured PB20 to copy its account settings to the new entry. Each entry signs in and updates its password independently.",
         "data": {
-          "account_source": "Existing account"
+          "account_source": "Configured PB20"
         }
       }
     },

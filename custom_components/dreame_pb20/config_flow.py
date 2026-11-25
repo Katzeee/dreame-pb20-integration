@@ -50,17 +50,13 @@ class PB20ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._devices: dict[str, DeviceInfo] = {}
 
     def _existing_accounts(self) -> dict[str, tuple[str, dict[str, str]]]:
-        """Offer a one-time import from known config schemas, with no runtime dependency."""
+        """Find accounts already configured for a PB20."""
         accounts = {}
         seen = set()
-        for entry in self.hass.config_entries.async_entries():
-            if entry.domain not in (DOMAIN, "dreame_vacuum"):
-                continue
+        for entry in self.hass.config_entries.async_entries(DOMAIN):
             data = entry.data
-            if entry.domain == "dreame_vacuum" and data.get("account_type") != "dreame":
-                continue
             username, password = data.get(CONF_USERNAME), data.get(CONF_PASSWORD)
-            region = data.get(CONF_REGION, data.get("country"))
+            region = data.get(CONF_REGION)
             if (
                 not isinstance(username, str)
                 or not isinstance(password, str)
